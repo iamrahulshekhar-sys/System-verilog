@@ -55,3 +55,72 @@ module test;
 endmodule
 
 *----------------------------------------------------------------------------------------------------------------------------------------*
+
+2. Whats wrong with below constraint. Write the constraint? 
+Class const; 
+rand bit [7:0] low, mid, high; 
+constraint Const_1 {low <mid<high;} 
+end class
+
+Class const; 
+rand bit [7:0] low, mid, high; 
+constraint Const_1 {low <mid;}
+constraint Const_2 {mid < high;}
+end class
+
+*----------------------------------------------------------------------------------------------------------------------------------------*
+
+3. Write a single constraint to generate random values for bit [8:0] variable in the below range:
+1–34, 127, 129–156, 192–202, 257–260.
+
+class const;
+  rand bit [8:0] var;
+  constraint c1 { 
+    var inside {[1:34], 127, [129:156], [192:202], [257:260];}
+  }
+endclass
+
+*----------------------------------------------------------------------------------------------------------------------------------------*
+
+4. Write a constraint without an inside function to generate random values within the range of 34 to 43?
+
+class const;
+  rand bit [6:0] var;
+  constraint c1 { 
+    var >= 34 && var <= 43;
+  }
+endclass
+*----------------------------------------------------------------------------------------------------------------------------------------*
+
+6. Write a constraint to generate a random value for a var1 [7:0] within 50 and var2 [7:0] with the non-repeated value in every randomization?
+
+*----------------------------------------------------------------------------------------------------------------------------------------*
+
+7. Without using randomization method or rand keyword (modifiers), generate an array of unique values.
+
+*----------------------------------------------------------------------------------------------------------------------------------------*
+8. Generate unique elements in an array without using the keyword unique.
+
+9. Write a constraint to generate 0, 1, x, z randomly.
+
+10. Write a constraint to generate multiples of power 2.
+
+11. Having a 32-bit variable, only single-bit high values need to be accessed. Write a constraint for that.
+
+12. Write a constraint with array size 5 to 10 values & the array values should be in ascending order/descending order.
+
+13. Write a constraint to generate a pattern 0102030405.
+
+14. Constraint to generate pattern 0, 2, 1, 3, 4, 6, 5, 7, 8.
+
+15. Constraint to generate unique numbers between 99 to 100.
+
+16. Write a constraint – divisible by 5.
+
+17. Derive odd numbers within the range of 10 to 30 using SystemVerilog constraint.
+
+18. Write a constraint to generate prime numbers between the range of 1 to 100.
+
+19. What is circular dependency and how to avoid this problem?
+
+20. Write a constraint in such a way that for read transaction 30% time and for write transaction 70% time.
