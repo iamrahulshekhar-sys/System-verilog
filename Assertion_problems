@@ -1,1 +1,18 @@
+1. Write an assertion to check that once the signal start is asserted, the done signal goes high within exactly 4 clock cycles.
+assert propert (@(posedge clk) start |-> ##4 done);
+*-------------------------------------------------------------------------------------------------------------------------------------*
 
+2. Write an assertion to verify that when req goes high, ack must go high within 2 to 5 clock cycles.
+assert property (@(posedge clk) $rose(req) |-> ##[2:5] ack); 
+*-------------------------------------------------------------------------------------------------------------------------------------*
+
+3. Write a concurrent assertion to check that when a valid signal is high, the ready signal should also be high within the same cycle.
+assert property(@(posedge clk) valid |-> ready);
+*-------------------------------------------------------------------------------------------------------------------------------------*
+
+4. Write an assertion that ensures after a reset signal goes low (de-asserted), a data_valid signal must become high within 3 clock cycles and remain high for at least 2 cycles.
+assert property (@(posedge clk) $fell(reset) |-> ##[1:3] (data_valid[*2]));
+*-------------------------------------------------------------------------------------------------------------------------------------*
+
+5. Write an assertion to check that if "write_en" goes high, the "data_out" signal must change within 2 clock cycles
+assert property(@(posedge clk) $rose(write_en) |-> ##[1:2] data_out!=($past(data_out)));
