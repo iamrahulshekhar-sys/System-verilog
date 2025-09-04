@@ -1,0 +1,57 @@
+
+1. Randomize the below variable such as 
+
+class randvar; 
+rand bit [7:0] var1, var2, var3, var4; 
+endclass 
+
+i) Randomize all variable. 
+ii) Randomize only var2. 
+iii) Randomize var1, var4. 
+iv) Randomize var1, var3, var4.
+
+/////////////////////////////////////////////////////////////////////////////////
+
+i)
+module test;
+  randvar r;
+    initial begin
+      r = new();
+      r.randomize();
+    end
+endmodule
+
+/////////////////////////////////////////////////////////////////////////////////
+
+ii)
+module test;
+  randvar r;
+    initial begin
+      r = new();
+      r.randomize(r.var2);
+    end
+endmodule
+
+/////////////////////////////////////////////////////////////////////////////////
+
+iii) 
+module test;
+  randvar r;
+    initial begin
+      r = new();
+      r.randomize(r.var1, r.var4);
+    end
+endmodule
+
+/////////////////////////////////////////////////////////////////////////////////
+
+iv) 
+module test;
+  randvar r;
+    initial begin
+      r = new();
+      r.randomize(r.var1, r.var3, r.var4);
+    end
+endmodule
+
+*----------------------------------------------------------------------------------------------------------------------------------------*
