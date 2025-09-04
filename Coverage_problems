@@ -1,1 +1,57 @@
 
+1. Cover all values of a random variable between 0 and 100.
+
+covergroup a_range;
+  coverpoint a {
+    bins all_vals[] = {[0:100]};
+  }
+endgroup;
+
+*------------------------------------------------------------------------------------------------------------------------------------------*
+
+2. Cover even, odd, and multiple-of-10 numbers for a 0–100 range.
+covergroup a_range;
+  coverpoint a{
+    bins a_even[]    = {[0:100]} with (item %2 ==0);
+    bins a_odd[]     = {[0:100]} with (item%2 !=0);
+    bins a_mul10[]   = {[0:100]} with (item%10 == 0);
+  }
+endgroup
+
+*------------------------------------------------------------------------------------------------------------------------------------------*
+
+3. Cover each card in a 52-card deck.
+
+4. Cover student scores in bins: 0–50, 51–75, 76–100.
+
+5. Cover all transaction types and amount ranges.
+
+6. Cover dice values from 1 to 6 uniformly.
+
+7. Cover traffic light durations: green (30–60), yellow (5–10), red (50–90).
+
+8. Cover temperature sensor readings in 5 bins.
+
+9. Cover different lengths of burst transactions: 1, 2, 4, 8, 16.
+
+10. Cover all combinations of signal A (0/1) and signal B (0/1).
+
+11. Cover fsm_state transitions.
+
+12. Cover id field values from 0 to 15 in a packet.
+
+13. Cover binary vector values with even number of 1s.
+
+14. Cover all valid IP address ranges (first byte: 10, 172, 192).
+
+15. Cover valid and invalid packet types.
+
+16. Cover timing delays: 0–1, 2–4, 5–10 cycles.
+
+17. Cover all priority levels in arbiter (e.g., 0–3).
+
+18. Cover addr value bins in low, mid, high address spaces.
+
+19. Cover temperature crossing thresholds: <0, 0–25, 25–50, >50.
+
+20. Cover all combinations of protocol flags (QoS, prot, lock, cache).
