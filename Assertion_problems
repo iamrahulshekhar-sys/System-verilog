@@ -16,3 +16,23 @@ assert property (@(posedge clk) $fell(reset) |-> ##[1:3] (data_valid[*2]));
 
 5. Write an assertion to check that if "write_en" goes high, the "data_out" signal must change within 2 clock cycles
 assert property(@(posedge clk) $rose(write_en) |-> ##[1:2] data_out!=($past(data_out)));
+*-------------------------------------------------------------------------------------------------------------------------------------*
+
+6. Write an assertion to ensure that the signal busy is low when both enable and reset signals are high.
+assert property (@(posedge clk) (en && rst) |-> !signal);
+*-------------------------------------------------------------------------------------------------------------------------------------*
+
+7. Write an assertion to check that the valid signal is not asserted for more than 3 consecutive clock cycles. (not asserted=not high)
+assert property (@(posedge clk) valid |-> ##[1:3] !valid);
+*-------------------------------------------------------------------------------------------------------------------------------------*
+
+8. Write an assertion to verify that after a read operation is initiated (read_en goes high), the data_out signal should not change for 5 clock cycles unless read_en goes low.
+assert property (@(posedge clk) $rose(read_en) |-> (read_en throughout (data_out == $past(data_out))[*5]) );
+*-------------------------------------------------------------------------------------------------------------------------------------*
+
+9. Write an assertion to check that after the load signal is asserted, a ready signal must be asserted within 10 cycles, but not before 3 cycles.
+assert property (@(posedge clk) $rose(load) |-> ##[3:10] ready);
+*-------------------------------------------------------------------------------------------------------------------------------------*
+
+10. Write an assertion that checks if reset is de-asserted, the init_complete must go high exactly after 6 clock cycles and remain high for 2 cycles.
+assert property (@(posedge clk) !reset |-> ##6 (init_complete[*2]));
