@@ -92,14 +92,50 @@ class const;
 endclass
 *----------------------------------------------------------------------------------------------------------------------------------------*
 
-6. Write a constraint to generate a random value for a var1 [7:0] within 50 and var2 [7:0] with the non-repeated value in every randomization?
+5. Write a constraint to generate a random value for a var1 [7:0] within 50 and var2 [7:0] with the non-repeated value in every randomization?
+class const;
+  rand bit [7:0] var1;
+  randc bit [7:0] var2;
+  constraint c1 {
+    var1 inside {[0:50]};
+    var2 inside {[0:50]};
+    }
+endclass
 
 *----------------------------------------------------------------------------------------------------------------------------------------*
 
-7. Without using randomization method or rand keyword (modifiers), generate an array of unique values.
+6. Without using randomization method or rand keyword (modifiers), generate an array of unique values.
+class const;
+  int unsigned arr[];
+
+  function void build_arr(int size);
+  arr = new(size);
+  for (int i=0; i<size; i++)
+    begin
+      arr[i] = i;
+    end
+  arr.shuffle();
+  endfunction
+  
+endclass
 
 *----------------------------------------------------------------------------------------------------------------------------------------*
 8. Generate unique elements in an array without using the keyword unique.
+class const;
+  rand int arr[];
+  constraint c1 {
+    arr.size() inside {[0:5]};
+    foreach(arr[i]) {
+        foreach(arr[j]) {
+            if (i!=j)
+              arr[i] != arr[j]; 
+        }
+      }
+    }
+endclass
+*----------------------------------------------------------------------------------------------------------------------------------------*
+
+
 
 9. Write a constraint to generate 0, 1, x, z randomly.
 
