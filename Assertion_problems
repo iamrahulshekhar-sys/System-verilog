@@ -36,3 +36,37 @@ assert property (@(posedge clk) $rose(load) |-> ##[3:10] ready);
 
 10. Write an assertion that checks if reset is de-asserted, the init_complete must go high exactly after 6 clock cycles and remain high for 2 cycles.
 assert property (@(posedge clk) !reset |-> ##6 (init_complete[*2]));
+*-------------------------------------------------------------------------------------------------------------------------------------*
+
+11. Write an assertion to check that a FIFO is never read (read_en high) when it is empty (fifo_empty high).
+assert property(@(posedge clk) empty |-> !read_en);
+*-------------------------------------------------------------------------------------------------------------------------------------*
+
+12. Write an assertion to verify that a burst transfer of 4 data cycles occurs (i.e., data must change 4 times in consecutive cycles).
+assert property (@(posedge clk) burst |-> ##1(data != $past(data)) ##1(data != $past(data,1)) ##1(data != $past(data,2)) ##1(data != $past(data,3))); 
+*-------------------------------------------------------------------------------------------------------------------------------------*
+
+13. Write an assertion to check that write_enable is not asserted without a valid_address being asserted.
+assert property (@(posedge clk)  write_enable |-> valid_address);
+*-------------------------------------------------------------------------------------------------------------------------------------*
+
+14. Write an assertion to ensure if reset is de-asserted, the signal counter increments on every clock cycle for 5 consecutive clock cycles.
+assert property @($fell(reset) |-> ##1(counter == $past(counter)+1) ##1(counter == $past(counter,2)+1) ##1(counter == $past(counter,3)+1) ##1(counter == $past(counter,4)+1) ##1(counter == $past(counter,5)+1); 
+*-------------------------------------------------------------------------------------------------------------------------------------*
+
+15. Write an assertion to check that clk toggles correctly (i.e., no glitches occur) for at least 100 clock cycles.
+sequence toggle;
+(clk != $past(clk))[*100];
+endsequence
+assert property (@(posedge clk) toggle);
+*-------------------------------------------------------------------------------------------------------------------------------------*
+
+16. Write an assertion to check that a sequence of events (a, b, c) happens in strict order, where each event occurs exactly 2 cycles apart.
+sequence a_b_c;
+a ##2 b ##2 c;
+endsequence
+assert property(@(posedge clk) a_b_c);
+*-------------------------------------------------------------------------------------------------------------------------------------*
+
+17. 
+
