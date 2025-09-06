@@ -107,7 +107,6 @@ endclass
 6. Without using randomization method or rand keyword (modifiers), generate an array of unique values.
 class const;
   int unsigned arr[];
-
   function void build_arr(int size);
   arr = new(size);
   for (int i=0; i<size; i++)
@@ -116,11 +115,11 @@ class const;
     end
   arr.shuffle();
   endfunction
-  
 endclass
 
 *----------------------------------------------------------------------------------------------------------------------------------------*
-8. Generate unique elements in an array without using the keyword unique.
+
+7. Generate unique elements in an array without using the keyword unique.
 class const;
   rand int arr[];
   constraint c1 {
@@ -133,13 +132,43 @@ class const;
       }
     }
 endclass
+
 *----------------------------------------------------------------------------------------------------------------------------------------*
 
+8. Write a constraint to generate 0, 1, x, z randomly.
 
+class const;
+  rand logic val;
+  constraint c1 {
+    val inside {1'b0, 1'b1, 1'bx, 1'bz};
+  }
+endclass
 
-9. Write a constraint to generate 0, 1, x, z randomly.
+*----------------------------------------------------------------------------------------------------------------------------------------*
 
-10. Write a constraint to generate multiples of power 2.
+9. Write a constraint to generate of power 2.
+class packet;
+  int arr[];
+  rand int size;
+  rand bit [5:0] var1;
+  
+  constraint c1 {
+    size inside {[1:6]};
+  }
+
+  function void post_randomize();
+    arr = new[size];
+    foreach(arr[i])
+        if (i == 0)
+          arr[i] = 1;
+        else
+          arr[i] = arr[i-1] << 1;
+  endfunction
+endclass
+
+*----------------------------------------------------------------------------------------------------------------------------------------*
+
+    
 
 11. Having a 32-bit variable, only single-bit high values need to be accessed. Write a constraint for that.
 
