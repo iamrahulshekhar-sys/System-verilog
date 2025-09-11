@@ -85,16 +85,40 @@ endgroup
 
 endclass
 
-
 *------------------------------------------------------------------------------------------------------------------------------------------*
-
 
 7. Cover traffic light durations: green (30–60), yellow (5–10), red (50–90).
+
+class const;
+  rand int green, yellow, red;
+  covergroup traffic;
+    coverpoint green {
+      bins g[] = {[30:60]};
+    }
+    coverpoint yellow {
+      bins y[] = {[5:10]};
+    }
+    coverpoint red {
+      bins r[] = {[50:90]};
+    }
+  endgroup
+endclass
 *------------------------------------------------------------------------------------------------------------------------------------------*
 
-
 8. Cover temperature sensor readings in 5 bins.
-
+  class const;
+    rand int temp;
+    constraint c1 { temp inside {[0:100]}; }
+    covergroup c12 @(posedge clk);
+      coverpoint temp { 
+        bins very_low = {[0:20]};
+        bins low = {[21:40]};
+        bins med = {[41:60]};
+        bins high = {[61:80]};
+        bins very_high = {[81:100]};
+        }
+    endgroup
+  endclass
 *------------------------------------------------------------------------------------------------------------------------------------------*
 
 9. Cover different lengths of burst transactions: 1, 2, 4, 8, 16.
