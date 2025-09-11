@@ -68,5 +68,36 @@ endsequence
 assert property(@(posedge clk) a_b_c);
 *-------------------------------------------------------------------------------------------------------------------------------------*
 
-17. 
+17. Write an assertion to verify that two signals 'signal A' and 'signal B' never toggle in the same cycle.
+assert property (@(posedge clk) not ($changed(signalA) and $changed(signalB));
+*-------------------------------------------------------------------------------------------------------------------------------------*
+
+18. Write an assertion to make sure that a 5-bit grant signal only has one bit set at any time?
+assert property ( @(posedge clk) disable iff (!reset) $countones(grant) == 1);
+*-------------------------------------------------------------------------------------------------------------------------------------*
+
+19. Write an assertion which checks that once a valid request is asserted by the master, the arbiter provides a grant within 2 to 5 clock cycles.
+assert property (@(posedge clk) valid |-> ##[2:5] grant);
+*-------------------------------------------------------------------------------------------------------------------------------------*
+
+20. In a RESP operation, request must be true immediately, grant must be true 3 clock cycles later, followed by request being false, and then grant being false.
+assert property (@(posedge clk) disable iff(!reset) resp |-> (request ##3 grant ##1 !request ##1 !grant));
+*-------------------------------------------------------------------------------------------------------------------------------------*
+
+21. The signals signal_a and signal_b may only be asserted if signal_c is asserted.
+assert property ( @(posedge clk) disable iff(!reset) (signal_a || signal_b) -> signal_c);
+*-------------------------------------------------------------------------------------------------------------------------------------*
+
+22. Request must true at the current cycle; grant must become true sometime between 1 cycle after request and the end of time.
+assert proerty (@(posedge clk) disable iff(!reset) request |-> ##[1:$] grant);
+
+
+
+
+
+
+
+
+
+
 
