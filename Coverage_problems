@@ -10,6 +10,7 @@ endgroup;
 *------------------------------------------------------------------------------------------------------------------------------------------*
 
 2. Cover even, odd, and multiple-of-10 numbers for a 0–100 range.
+
 covergroup a_range;
   coverpoint a{
     bins a_even[]    = {[0:100]} with (item %2 ==0);
@@ -57,7 +58,6 @@ endclass
 5. Cover all transaction types and amount ranges.
 
 typdef enum {READ, WRITE, UPDATE, DELETE} txn_ty;
-
 class transaction;
   rand txn_ty t1;
   rand int amount;
@@ -75,6 +75,7 @@ endgroup
 *------------------------------------------------------------------------------------------------------------------------------------------*
 
 6. Cover dice values from 1 to 6 uniformly.
+
 class const;
   rand int dice;
   constraint c1 { dice inside [1,2,3,4,5,6];}
@@ -103,9 +104,11 @@ class const;
     }
   endgroup
 endclass
+
 *------------------------------------------------------------------------------------------------------------------------------------------*
 
 8. Cover temperature sensor readings in 5 bins.
+
   class const;
     rand int temp;
     constraint c1 { temp inside {[0:100]}; }
@@ -119,30 +122,32 @@ endclass
         }
     endgroup
   endclass
+
 *------------------------------------------------------------------------------------------------------------------------------------------*
 
 9. Cover different lengths of burst transactions: 1, 2, 4, 8, 16.
+
 class const;
   rand int burst_len;
 
   constraint c1 {
     burst_len inside {1,2,4,8,16};
   }
-
-covergroup burst;
-  coverpoint burst_len {
-    bins len_1 = {1};
-    bins len_2 = {2};
-    bins len_4 = {4};
-    bins len_8 = {8};
-    bins len_16 = {16};
-  }
+  covergroup burst;
+    coverpoint burst_len {
+      bins len_1 = {1};
+      bins len_2 = {2};
+      bins len_4 = {4};
+      bins len_8 = {8};
+      bins len_16 = {16};
+    }
   endgroup
-
 endclass
+
 *------------------------------------------------------------------------------------------------------------------------------------------*
 
 10. Cover all combinations of signal A (0/1) and signal B (0/1).
+
 class const;
   logic sig_a, sig_b;
   covergroup signal;
@@ -155,9 +160,11 @@ class const;
     cross sig_a, sig_b;
   endgroup
 endclass
+
 *------------------------------------------------------------------------------------------------------------------------------------------*
 
 11. Cover fsm_state transitions.
+
 class const;
   typedef enum {S1,S2,S3,S4}state_ty;
   rand state_ty state, next_state;
@@ -172,18 +179,51 @@ class const;
     cross state, next_state;
   endgroup
 endclass
-*------------------------------------------------------------------------------------------------------------------------------------------*
 
+*------------------------------------------------------------------------------------------------------------------------------------------*
 
 12. Cover id field values from 0 to 15 in a packet.
-*------------------------------------------------------------------------------------------------------------------------------------------*
 
+class const;
+  rand int id;
+  covergroup field_value @(posedge clk);
+    coverpoint id {
+      bins id_bins[] = {[0:15]};
+      }
+  endgroup
+endclass
+
+*------------------------------------------------------------------------------------------------------------------------------------------*
 
 13. Cover binary vector values with even number of 1s.
+class const;
+  rand logic [7:0] data;
+  covergroup bin_vector @(posedge clk);
+    coverpoint arr {
+      bins arr_bin[] = {[0:$}} with ($countones(item)%2 == 0);
+    }
+  endgroup
+endclass
+
 *------------------------------------------------------------------------------------------------------------------------------------------*
 
-
 14. Cover all valid IP address ranges (first byte: 10, 172, 192).
+class const;
+  rand int byte1, byte2, byte3, byte4;
+  covergroup ip_addr;
+    coverpoint byte1 { 
+      bins byte_1[] = {10,172,192}; }
+      coverpoint byte2 { bins byte_2[] = {[0:255]}; }
+      coverpoint byte3 { bins byte_3[] = {[0:255]}; }
+      coverpoint byte4 { bins byte_4[] = {[0:255]}; }
+        }
+    endgroup
+
+  function new();
+    ip_addr = new();
+  endfunction
+endclass
+
 *------------------------------------------------------------------------------------------------------------------------------------------*
 
 
