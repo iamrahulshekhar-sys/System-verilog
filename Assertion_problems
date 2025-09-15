@@ -104,10 +104,12 @@ assert property (@(posedge clk) power_up |-> ##[1:5] !reset);
 assert property (@(posedge clk) wvalid && !wready |-> (wvalid && !wready)[*1:2] ##1 (!wvalid or wready));
 *-------------------------------------------------------------------------------------------------------------------------------------*
 
-Ensure FIFO never underflows (read without empty).
+26. Ensure FIFO never underflows (read without empty).
+assert property (@(posedge clk) empty |-> !read);
 *-------------------------------------------------------------------------------------------------------------------------------------*
 
-Assert that no transaction occurs during reset.
+27. Assert that no transaction occurs during reset.
+
 *-------------------------------------------------------------------------------------------------------------------------------------*
 
 Assert burst transfers complete with burst_len cycles.
