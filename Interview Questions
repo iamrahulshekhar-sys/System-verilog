@@ -1,0 +1,306 @@
+Interview questions
+
+ 
+Q) Floorplan-driven synthesis
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+Q) What is boundary scan?
+Boundary Scan, standardized as IEEE 1149.1 (JTAG), is a DFT technique where special scan cells are placed at each I/O pin of the IC. These cells form a serial chain that allows controlling and observing pin values through the TAP interface. It enables testing of board-level interconnects without physical probes, improving testability of complex packages like BGAs, and is also widely used for in-system programming and debug.
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+Q) Scan stitching at block level?
+Scan stitching at the block level means inserting scan chains inside each block of a design independently, then exposing scan-in/scan-out ports for integration. At the SoC level, these block-level scan chains are stitched together to form chip-level scan chains. This hierarchical approach simplifies integration, improves reuse of IPs with pre-inserted DFT, and helps balance test complexity across large designs
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+Q) Difference: SRAM vs DRAM
+SRAM uses a 6-transistor latch cell, doesn’t need refresh, and is faster but less dense and more expensive, so it’s used for caches and register files. DRAM uses a 1T-1C cell, needs periodic refresh since data is stored as charge on a capacitor, but it’s denser and cheaper, making it suitable for main memory.
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+Q) Application of shift registers
+Shift registers are widely used for serial-to-parallel and parallel-to-serial conversion, temporary data storage, delay elements, counters, and sequence generation (like LFSRs for CRC and random numbers). They are also essential in communication systems (UART/SPI), arithmetic operations, and digital signal processing pipelines.
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+Q) Logic BIST vs MBIST
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+Q) Fault coverage in ATPG
+
+***************************************************************************************************************************************************************************************************
+
+𝗣𝗮𝗻𝗲𝗹 𝟯: 𝗙𝗹𝗼𝗼𝗿𝗽𝗹𝗮𝗻 𝘁𝗼 𝗥𝗼𝘂𝘁𝗲
+
+Q) Key floorplan quality checks
+Good floorplan quality is crucial for a successful and timely chip design. Key checks ensure that the physical layout is sound and will not cause problems during later stages like place and route.
+
+1. Timing
+The floorplan must support the design's timing goals.
+* Timing Closure: Check for early timing analysis results using estimated wire delays. The floorplan should not introduce any major timing violations that can't be fixed later.
+* Clock Skew: Ensure that the clock pins of sequential elements (flip-flops, registers) are well-placed to minimize clock skew, which is the difference in clock signal arrival times.
+* Critical Paths: Verify that the logic cells on the most critical timing paths are placed close to each other to minimize their interconnect delay.
+
+2. Area and Density
+The floorplan needs to be efficient in its use of silicon area.
+* Core Utilization: Check the percentage of the core area that is occupied by standard cells. A very high utilization might lead to routing congestion. A very low one wastes silicon.
+* Logic Density: Ensure that the logic is distributed evenly throughout the core. Hotspots (areas of high logic density) can cause congestion and local heating issues.
+* Aspect Ratio: The ratio of the chip's width to its height should be appropriate. An extreme aspect ratio can make routing difficult and lead to longer wires.
+
+3. Power
+Power integrity is vital for chip functionality and reliability.
+* Power Grid Integrity: Check that the power and ground rails are wide enough and well-distributed to handle the required current without causing voltage drops (IR drop).
+* Power Mesh Continuity: Ensure there are no breaks in the power grid that could starve a portion of the chip of power.
+
+4. Routing
+The floorplan must be routable.
+* Routing Congestion: The most important check. Use a routing estimation tool to identify areas that are likely to be too crowded for wires to be routed. High congestion is a primary cause of design failures and must be addressed by adjusting cell placement or moving I/O ports.
+* I/O and Block Placement: Verify that I/O pads and large IP blocks (like RAM or PLLs) are placed logically to support efficient signal flow with minimal wire length.
+
+5. Electrostatic Discharge (ESD)
+The design must be protected from electrostatic discharge.
+* ESD Structures: Ensure that the ESD protection circuitry is correctly placed around the I/O pads to protect the internal core from static discharge events.
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
+Q) Macro placement with channel spacing
+Macro placement with channel spacing is a key strategy in the physical design of a chip where large, fixed-size blocks (macros or IP blocks) are placed with a specific, empty area, known as a channel, left between them. The primary purpose of these channels is to provide a dedicated, clear area for routing.
+
+Purpose of Channel Spacing
+
+The main goal of channel spacing is to prevent routing congestion.
+* The core logic (standard cells) associated with the macros is often placed in the channels.
+* Signals that need to connect to the macros or to other parts of the chip are routed through these channels.
+* Without adequate spacing, these wires would have to be routed over the top of the macros, which is often difficult or impossible, or they would be packed too tightly, leading to routing failures.
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
+Q) Difference: keep-out vs blockage
+In the physical design of an integrated circuit, keep-out and blockage are both types of physical constraints used to control the placement and routing of components. While they are often used interchangeably, they have distinct purposes and behaviors.
+
+Blockage
+
+A blockage is a general term for an area on the chip that is made unavailable for placement or routing. Blockages are typically used to reserve space for future manual placement, to prevent tools from placing logic in a bad location, or to protect critical areas.
+There are several types of blockages:
+* Placement Blockage: This prevents standard cells (logic gates, flip-flops) from being placed within a specified area.
+* Routing Blockage: This prevents the automatic router from drawing interconnect wires within a specified area or on specific metal layers. This is often used to reserve space for a custom clock tree or to avoid noise-sensitive analog circuitry.
+* Partial/Soft Blockage: This discourages, but does not strictly prohibit, placement or routing. Tools will try to avoid these areas but can use them if absolutely necessary.
+* Hard Blockage: This is a strict prohibition. No cells or wires can be placed in this area.
+
+Keep-Out
+
+A keep-out is a more specific type of placement blockage. Its primary purpose is to prevent specific types of cells from being placed near other cells or within a certain radius.
+For example:
+* I/O Cell Keep-Out: You might define a keep-out region around sensitive analog I/O pads to prevent noisy digital standard cells from being placed too close, which could cause signal integrity issues.
+* Well Tap/Decap Keep-Out: Keep-out regions can be used to prevent tools from placing power-saving "decoupling capacitors" or "well taps" too close to analog macros, which need to be protected from noise.
+A keep-out is a relative constraint, often tied to a specific type of cell, whereas a blockage is an absolute constraint on a geometric area.
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
+Q) How utilization affects IR drop
+What are Utilization and IR Drop?
+
+* Utilization: This is the percentage of the core area of a chip that is actually occupied by standard cells (logic gates, flip-flops). A high utilization (e.g., 85%) means the cells are packed very densely.
+* IR Drop: This is the voltage drop that occurs across the power and ground rails of a chip due to resistance in the metal interconnects. The "I" stands for current, and the "R" stands for resistance. As current flows through the resistive power grid, a voltage drop (V = I * R) occurs, so the voltage supplied to the cells is lower than the intended voltage.
+
+The Connection: How High Utilization Affects IR Drop
+
+High utilization negatively impacts IR drop primarily because it leads to increased current density and resistance.
+
+1. Increased Current Density
+When standard cells are packed tightly together (high utilization), the local current demand in that area becomes very high.
+* More cells in a given area means more switching activity, which draws more current from the power grid.
+* This concentrated current draw creates a "hotspot" of high current density on the power rails.
+
+2. Increased Resistance (Reduced Routing Resources)
+High utilization also has a negative impact on the power grid's effective resistance.
+* A dense layout leaves very little space for the power and ground rails.
+* The physical design tools have to squeeze the power rails into these narrow gaps, making them thinner and less robust.
+* According to the formula for resistance (R=Aρ⋅L ), a smaller cross-sectional area (A) of the power rail leads to a higher resistance (R).
+* The high number of signal wires in a high-utilization area also competes for the same routing tracks as the power grid, further limiting the options for robust power routing.
+
+The Negative Feedback Loop
+
+The relationship between utilization and IR drop can become a negative feedback loop:
+1. Start with high utilization: The floorplan is packed tightly to save area.
+2. Increased Routing Congestion: The dense layout makes it hard for both signal and power wires to be routed efficiently.
+3. Thinner Power Grid: The power grid is squeezed into the remaining space, increasing its resistance.
+4. Higher Current Density: The packed cells draw a lot of current from a small area.
+5. Significant IR Drop: The combination of high current draw and high resistance causes a large voltage drop, which can lead to timing failures and functional errors.
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
+Q) Sources of routing congestion
+
+Here are the key sources of routing congestion:
+
+1. High Core Utilization
+This is the most common and direct cause. When the percentage of the core area filled with standard cells is too high (e.g., above 85%), there is very little empty space left for the routing tool to draw wires. The standard cells themselves have a certain footprint, and the space between them is where the wires are routed. A high utilization rate leaves very little space, making it impossible to connect all the nets.
+
+2. Poor Macro Placement
+Incorrect placement of large, fixed-size blocks (macros or IP blocks) can create congestion hotspots.
+* Lack of Channel Spacing: If macros are placed too close to each other without sufficient routing channels, the router will struggle to connect the I/O pins of the macros.
+* I/O Pin Alignment: If the I/O pins of macros are not aligned or if they are on opposite sides of the chip, the router may have to run long wires through dense areas, creating congestion.
+
+3. I/O Pin Hotspots
+I/O pads and pins on the periphery of the chip can be a source of congestion.
+* Pin Density: If a large number of signals must be routed to a single, small area on the periphery (e.g., for a specific bus or interface), it can cause a local congestion bottleneck.
+* Pad-to-Core Connections: The connection of signals from the I/O pads to the internal logic can create a "traffic jam" if not planned properly.
+
+4. Poor Partitioning
+In large designs, the chip is often divided into smaller, manageable partitions.
+* Unbalanced Partitions: If a partition is too small for its logic, it will lead to high utilization and congestion within that partition.
+* Inter-partition Connectivity: If a large number of signals need to cross between partitions, the small routing channels between them can become highly congested.
+
+5. Complex Clock and Reset Networks
+The clock and reset nets are typically routed using dedicated layers to ensure minimal skew.
+* Clock Mesh/Grid: A complex clock mesh or grid is used for low skew, but it occupies a significant amount of routing resource on multiple metal layers, potentially creating congestion for signal routing.
+
+6. Power Grid
+The power and ground rails are typically very wide to handle high current, and they can occupy a significant portion of the routing layers. If not designed carefully, they can obstruct signal routing and create congestion.
+
+Solutions to Routing Congestion
+
+* Reduce Core Utilization: This is the most effective solution. Reducing the target utilization rate (e.g., from 85% to 75%) leaves more space for routing.
+* Optimize Floorplan: Adjusting the placement of macros and adding adequate routing channels is critical.
+* Physical-Aware Synthesis: Using tools that consider physical layout information early in the synthesis stage can help create a netlist that is easier to place and route.
+* Design Partitions with Routing in Mind: Balance logic density and connectivity when partitioning the design.
+* Pin Swapping: Using tools to swap I/O pins of a block can reduce wire length and avoid congestion.
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
+Q) Pin access issues in standard cells
+Pin access is a critical consideration in the physical design of an integrated circuit. A standard cell is a basic building block (e.g., an AND gate, a flip-flop) with predefined physical dimensions, pin locations, and timing characteristics. A pin access issue occurs when the automatic placement and routing tools are unable to connect to a standard cell's input or output pins.
+
+Why Pin Access is a Problem
+
+The pins of a standard cell are small metal shapes on a specific metal layer. The routing tool needs to be able to draw an interconnect wire to these pins to connect them to other cells. If a pin is blocked or inaccessible, the tool cannot complete the connection, leading to an unrouted net and a design failure.
+
+Key Causes of Pin Access Issues
+1. Overly Aggressive Cell Placement (High Density)
+* Too High Utilization: When the design's core utilization is too high, standard cells are packed very tightly together. This leaves very little space between the cells for routing channels.
+* Pin "Shadowing": In a dense layout, one cell can be placed so close to another that its body or a neighboring wire physically blocks a pin of an adjacent cell, making it impossible for a router to access the pin.
+
+2. Poorly Designed Standard Cell Library
+* Pin Location: A poorly designed standard cell library may have pins that are difficult to access. For example, if all the pins are on the inner part of a cell with no clear routing channel, it will cause routing problems.
+* Limited Routing Layers: If a standard cell library restricts pin access to only one or two metal layers, it creates a routing bottleneck on those specific layers, making it harder to connect all the nets.
+
+3. Inefficient Placement of Cells
+* Cell Orientation: Standard cells can be placed in different orientations (e.g., flipped, rotated). If a cell's orientation is such that its pins are facing away from the logical connectivity, the router will have to take longer detours, which can increase the chance of blockages.
+* Clustering: Placing a large number of cells that have high connectivity to each other in a small, isolated area can create a local congestion and pin access issue.
+
+4. Hard Blockages and Keep-Outs
+* Overly Restrictive Constraints: If the physical designer places too many or overly large blockages or keep-out areas, it can limit the available space for the placement and routing tools, forcing them to use sub-optimal locations and creating pin access issues.
+* Macro Placement: When standard cells are placed in the channels around large macros, the router has to navigate around the macro's boundaries. If the macro is placed too close to the standard cells, it can block access to their pins.
+
+Solutions
+
+* Lower Utilization: The most direct solution is to reduce the target core utilization to provide more routing space.
+* Optimize Floorplan: Adjusting the placement of macros and adding dedicated routing channels can help.
+* Pin Access-Aware Placement: Modern placement tools are "pin access-aware" and will try to orient and place cells to minimize pin access problems.
+* Library Characterization: Using a high-quality standard cell library that has been characterized for good routability and pin access.
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
+Q) Difference: track-based vs grid routing
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
+Q) Common routing violations
+
+***************************************************************************************************************************************************************************************************
+𝗣𝗮𝗻𝗲𝗹 𝟰: 𝗖𝗹𝗼𝗰𝗸 𝗧𝗿𝗲𝗲 𝗦𝘆𝗻𝘁𝗵𝗲𝘀𝗶𝘀
+Steps in CTS optimization
+Define insertion delay vs skew
+Example of useful skew application
+Clock tree power reduction techniques
+Multi-power domain CTS handling
+Types of clock gating
+Placement optimization for CTS
+
+***************************************************************************************************************************************************************************************************
+𝗣𝗮𝗻𝗲𝗹 𝟱: 𝗧𝗶𝗺𝗶𝗻𝗴 𝗖𝗹𝗼𝘀𝘂𝗿𝗲 𝗮𝗻𝗱 𝗠𝗖𝗠𝗠
+Why do we need multi-corner analysis?
+Setup fixing techniques
+Hold fixing techniques
+Crosstalk-aware timing closure
+Guard-band vs derating
+Timing path prioritization
+Clock jitter vs clock uncertainty
+
+***************************************************************************************************************************************************************************************************
+𝗣𝗮𝗻𝗲𝗹 𝟲: 𝗦𝗶𝗴𝗻𝗼𝗳𝗳 𝗮𝗻𝗱 𝗣𝗼𝘄𝗲𝗿
+Active vs standby power
+Static vs dynamic IR drop
+IR drop mitigation methods
+Role of dummy metal fill
+EM checks in signoff
+DRC categories in routing
+Why is LVS mandatory?
+Role of end-cap cells
+Methods to fix shorts/opens
+
+***************************************************************************************************************************************************************************************************
+
+𝐑𝐞𝐜𝐫𝐮𝐢𝐭𝐞𝐫 𝐒𝐜𝐫𝐞𝐞𝐧𝐢𝐧𝐠
+1. Walk through your resume
+2. ASIC design projects handled?
+3. RTL to GDSII familiarity?
+4. Tool expertise (Verilog, Synthesis, STA tools)?
+5. Any post-silicon/tapeout experience?
+
+***************************************************************************************************************************************************************************************************
+
+📌Panel 1: Basics + STA
+1. What is STA?
+2. What is the difference between setup and hold time?
+3. How do you fix routing congestion?
+4. Explain the antenna effect.
+5. What does IR drop mean?
+6. What is the difference between an LVT and an HVT cell?
+7. Explain Electromigration (EM).
+8. How do you handle clock domain crossing (CDC)?
+9. What is OCV?
+***************************************************************************************************************************************************************************************************
+
+📌Panel 2: Floorplanning to Routing
+1. What are the key steps in ASIC floorplanning?
+2. Explain the difference between Global vs. Detailed routing.
+3. What are halo and blockage definitions?
+4. What are some of the main causes of congestion?
+5. How do you handle pin access issues?
+6. What are the different routing DRC types and their solutions?
+
+***************************************************************************************************************************************************************************************************
+
+📌Panel 3: Signoff + Power Analysis
+1. Explain the difference between Dynamic vs. Leakage power.
+2. What is the purpose of metal fill, and how does it affect timing?
+3. How do you debug IR drop?
+4. What are the rules for Electromigration (EM) during signoff?
+5. Why are filler cells important?
+6. What are LVS and DRC checks?
+***************************************************************************************************************************************************************************************************
+📌Panel 4: STA + Scripting
+1. What is CRPR?
+2. How do you fix crosstalk noise/delay?
+3. How is delay computation performed in STA?
+4. What are the different types of SDC constraints?
+5. How would you use a Tcl script to find the top 10 critical paths?
+6. Explain the purpose of the max_transition constraint.
+7. How do you ensure Python script reusability?
+***************************************************************************************************************************************************************************************************
+📌Panel 5: Timing Closure + MCMM
+1. What is MCMM?
+2. What is the process for Setup vs. Hold ECOs?
+3. What are some SI-aware closure techniques?
+4. Explain the difference between Derating vs. Margin.
+5. How do you handle violating paths?
+***************************************************************************************************************************************************************************************************
+📌Extra: Common Questions (All Rounds)
+1. What is the difference between Cell vs. Net delay?
+2. Explain crosstalk delay.
+3. What is RC extraction?
+4. How do you handle a glitch?
+5. Explain a timing arc.
+6. Define clock skew, slack, and slew.
+7. How do you debug setup/hold failures?
+8. Design a divide-by-N counter.
+9. Design an FSM that acts as a 101 detector.
+10. What is the difference between a Mealy vs. Moore machine?
