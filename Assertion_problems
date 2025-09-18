@@ -109,22 +109,27 @@ assert property (@(posedge clk) empty |-> !read);
 *-------------------------------------------------------------------------------------------------------------------------------------*
 
 27. Assert that no transaction occurs during reset.
-
+assert property (@(posedge clk) reset |-> !transaction);
 *-------------------------------------------------------------------------------------------------------------------------------------*
 
-Assert burst transfers complete with burst_len cycles.
+28. Assert burst transfers complete with burst_len cycles.
+assert property (@(posedge clk) burst_start |-> (burst_active[*burst_len] ##1 burst_done));
 *-------------------------------------------------------------------------------------------------------------------------------------*
 
-Check that write happens only when enable is high.
+29. Check that write happens only when enable is high.
+assert property (@(posedge clk) write |-> enable);
 *-------------------------------------------------------------------------------------------------------------------------------------*
 
-Assert a transaction ID is not repeated consecutively.
+30. Assert a transaction ID is not repeated consecutively.
+assert property (@(posedge clk) trans |-> (trans_id != ($past(trans_id)));
 *-------------------------------------------------------------------------------------------------------------------------------------*
 
-Ensure address in a write is aligned (addr % 4 == 0).
+31. Ensure address in a write is aligned (addr % 4 == 0).
+assert property (@(posedge clk) (write || read) |-> (addr[1:0] == 2'b00));
 *-------------------------------------------------------------------------------------------------------------------------------------*
 
-Assert signal done is only asserted after start.
+32. Assert signal done is only asserted after start.
+assert property (@(posedge clk) !$past(start) |-> !done);
 *-------------------------------------------------------------------------------------------------------------------------------------*
 
 Check arvalid is followed by arready within 5 cycles.
