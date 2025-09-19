@@ -257,22 +257,70 @@ Pre-CTS Setup → Clock Tree Synthesis (Build Tree) → Skew/Latency Optimizatio
 
 ——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
-Define insertion delay vs skew
+Q) Define insertion delay vs skew
+1. Insertion Delay
+
+Definition:
+Insertion delay refers to the extra time added to a signal path when a component (like a gate, buffer, or interconnect) is inserted into that path. It is essentially the time it takes for a signal to propagate through that added element.
+Skew is the difference in arrival times of the same clock signal (or a signal) at different points in a circuit.
 ——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
-Example of useful skew application
+Q) Example of useful skew application
+Can help with setup and hold time.
 ——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
-Clock tree power reduction techniques
+Q) Clock tree power reduction techniques
+
+| Technique                 | Approach                                      | Benefit                         |
+| ------------------------- | --------------------------------------------- | ------------------------------- |
+| Clock Gating              | Disable idle logic clocks                     | Reduces dynamic power           |
+| Buffer/Tree Sizing        | Optimize buffer sizes in the clock tree       | Lower capacitance, lower power  |
+| Low-Swing / Differential  | Reduce voltage swing                          | Cuts $V^2$ component of power   |
+| Multi-Level Gating        | Hierarchical clock gating                     | Fine-grained power control      |
+| Reducing Clock Load       | Minimize fanout / local buffering             | Lower switching power           |
+| Clock Tree Topology       | H-tree, X-tree, mesh                          | Balanced skew + power reduction |
+| Multi-Voltage / Frequency | Run less critical blocks slower or at lower V | Dynamic power saving            |
+
 ——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
-Multi-power domain CTS handling
+Q) Multi-power domain CTS handling
+
+| Technique / Concept        | Description                                       | Benefit                                   |
+| -------------------------- | ------------------------------------------------- | ----------------------------------------- |
+| Separate CTS per domain    | Build clock trees independently in each domain    | Avoids driving OFF regions                |
+| Power-aware clock gating   | Gate clocks to powered-down domains               | Saves dynamic power                       |
+| Level shifters             | Handle signals crossing different voltage domains | Prevents voltage mismatch / timing errors |
+| Domain-aware skew planning | Skew analysis done per domain                     | Ensures timing closure                    |
+| CDC / Clock merging        | Controlled crossing between domains               | Avoids metastability                      |
+
 ——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
-Types of clock gating
+Q) Types of clock gating
+
+| Type / Technique            | How It Works                      | Pros                        | Cons                        |
+| --------------------------- | --------------------------------- | --------------------------- | --------------------------- |
+| Latch-Based                 | Latch controls gated clock        | Glitch-free, safe           | Area overhead               |
+| Integrated / Register-Based | Flip-flop internally gates clock  | Area/power efficient        | Only sequential elements    |
+| AND/OR Based                | Combinational logic gates clock   | Simple                      | Glitches possible           |
+| Fine-Grained                | Gate clocks at FF/block level     | Maximum power saving        | Complex to implement        |
+| Coarse-Grained              | Gate clocks at module/block level | Simple                      | Less power saving           |
+| RTL Clock Gating            | Inserted in RTL                   | Tool-optimized, predictable | Limited to synthesis scope  |
+| Tech-Based Clock Gating     | Added in post-synthesis/CTS       | Can optimize clock tree     | May need extra verification |
+
 ——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
-Placement optimization for CTS
+Q) Placement optimization for CTS
+
+| Optimization Technique  | Purpose / Benefit                              |
+| ----------------------- | ---------------------------------------------- |
+| Buffer Placement        | Minimize skew and delay, control load          |
+| Flip-Flop Clustering    | Reduce wire length, power, and insertion delay |
+| Clock Source Placement  | Reduce max skew, centralize driving region     |
+| H-tree / Balanced Tree  | Ensure equal path lengths, minimize skew       |
+| Critical Path Awareness | Optimize timing for high-speed paths           |
+| Power-Aware Placement   | Avoid toggling in powered-down domains         |
+| Timing-Driven Placement | Optimize setup/hold margins and skew           |
+
 ——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 
 
