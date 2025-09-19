@@ -226,25 +226,87 @@ endclass
 
 *------------------------------------------------------------------------------------------------------------------------------------------*
 
-
 15. Cover valid and invalid packet types.
+typdef enum {VALID, INVALID} state_ty;
+class const;
+  rand state_ty ty;
+  covergroup c1;
+    coverpoint ty { bins valid_bin = {VALID};
+                    bins invalid_bin = {INVALID}; }
+
+  endgroup
+endclass
+
 *------------------------------------------------------------------------------------------------------------------------------------------*
 
 16. Cover timing delays: 0–1, 2–4, 5–10 cycles.
-*------------------------------------------------------------------------------------------------------------------------------------------*
+class const;
+  rand int delay;
+  covergroup c1 ;
+    coverpoint delay { bins delay_low[] = {[0:1]};
+                        bins delay_med[] = {[2:4]};
+                        bins delay_high[] = {[5:10]};
+                      }
+  endgroup
+endclass
 
+*------------------------------------------------------------------------------------------------------------------------------------------*
 
 17. Cover all priority levels in arbiter (e.g., 0–3).
+typedef enum logic [1:0] {LEVEL0, LEVEL1, LEVEL2, LEVEL3} type;
+class const;
+  rand type ty;
+  covergroup c1;
+    coverpoint ty { bins levels[] = {LEVEL0, LEVEL1, LEVEL2, LEVEL3}; }
+  endgroup
+endclass
+
 *------------------------------------------------------------------------------------------------------------------------------------------*
 
-
 18. Cover addr value bins in low, mid, high address spaces.
+class const;
+  rand bit [15:0] addr;
+  covergroup c1; 
+    coverpoint addr { bins low_addr = {[16'h0000 : 16'h3fff]};
+                      bins mid_addr = {[16'h4000 :16'hbfff]};
+                      bins high_addr = {[16'hc000: 16'hffff]};
+                    }
+  endgroup
+endclass
+
 *------------------------------------------------------------------------------------------------------------------------------------------*
 
 19. Cover temperature crossing thresholds: <0, 0–25, 25–50, >50.
+class const;
+  rand int temp;
+  covergroup c1;
+    coverpoint temp { bins less_zero = {[-$:-1]};
+                      bins mid_twenty = {[0:24]};
+                      bins mid_fifty = {[25:49]};
+                      bins above_fifty = {[50:$]};
+                    }
+  endgroup
+endclass
+
 *------------------------------------------------------------------------------------------------------------------------------------------*
 
-
 20. Cover all combinations of protocol flags (QoS, prot, lock, cache).
+
+class const;
+  rand bit [1:0] qos;   // Example: 2-bit QoS level
+  rand bit prot;        // 1-bit protocol flag
+  rand bit lock;        // 1-bit lock flag
+  rand bit cache;       // 1-bit cacheable flag
+
+  covergroup c1;
+    cp_qos   : coverpoint qos  { bins qos_vals[]   = {[0:3]}; } // QoS levels
+    cp_prot  : coverpoint prot { bins prot_vals[]  = {0,1}; }
+    cp_lock  : coverpoint lock { bins lock_vals[]  = {0,1}; }
+    cp_cache : coverpoint cache{ bins cache_vals[] = {0,1}; }
+
+    // Cross coverage for all combinations
+    cross cp_qos, cp_prot, cp_lock, cp_cache;
+  endgroup
+
 *------------------------------------------------------------------------------------------------------------------------------------------*
 
