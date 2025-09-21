@@ -132,13 +132,16 @@ assert property (@(posedge clk) (write || read) |-> (addr[1:0] == 2'b00));
 assert property (@(posedge clk) !$past(start) |-> !done);
 *-------------------------------------------------------------------------------------------------------------------------------------*
 
-Check arvalid is followed by arready within 5 cycles.
+33. Check arvalid is followed by arready within 5 cycles.
+assert property (@(posedge clk) $rose(arvalid) |=> ##[0:5]arready;
 *-------------------------------------------------------------------------------------------------------------------------------------*
 
-Assert that clock frequency doesn’t skip (no 2 rising edges too close).
+34. Assert that clock frequency doesn’t skip (no 2 rising edges too close).
 *-------------------------------------------------------------------------------------------------------------------------------------*
 
-Check that packet size is always less than max allowed size.
+35. Check that packet size is always less than max allowed size.
+parameter int MAX_SIZE = 1024;
+assert property (@(posedge clk) packet_valid |-> packet_size < MAX_SIZE);
 *-------------------------------------------------------------------------------------------------------------------------------------*
 
 Ensure grant signal is not active for more than 10 cycles.
