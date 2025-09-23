@@ -326,13 +326,138 @@ Q) Placement optimization for CTS
 
 ***************************************************************************************************************************************************************************************************
 𝗣𝗮𝗻𝗲𝗹 𝟱: 𝗧𝗶𝗺𝗶𝗻𝗴 𝗖𝗹𝗼𝘀𝘂𝗿𝗲 𝗮𝗻𝗱 𝗠𝗖𝗠𝗠
-Why do we need multi-corner analysis?
-Setup fixing techniques
-Hold fixing techniques
-Crosstalk-aware timing closure
-Guard-band vs derating
-Timing path prioritization
-Clock jitter vs clock uncertainty
+
+Q) Why do we need multi-corner analysis?
+A corner is a combination of process, voltage, and temperature (PVT) conditions under which the chip may operate.
+Example corners:
+Fast corner (FF, high V, low T) → cells switch faster.
+Slow corner (SS, low V, high T) → cells switch slower.
+Typical corner (TT) → nominal conditions.
+We need multi-corner analysis to guarantee timing closure across all real-world conditions, ensuring first-time-right silicon.
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
+Q) Setup fixing techniques
+
+| Method               | Fix Strategy        | Trade-off                  |
+| -------------------- | ------------------- | -------------------------- |
+| Cell sizing / Low-Vt | Faster logic        | More leakage power         |
+| Buffer insertion     | Reduce net delay    | Extra area & dynamic power |
+| Placement / routing  | Shorter delay       | PnR complexity             |
+| Useful clock skew    | Delay capture clock | Can worsen hold            |
+| Pipeline / retiming  | Split path          | Adds latency               |
+| Multicycle path      | Relax constraint    | Must be logically valid    |
+| Voltage scaling      | Faster cells        | More dynamic power         |
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
+Q) Hold fixing techniques
+
+| Method                      | Fix Strategy           | Trade-off                 |
+| --------------------------- | ---------------------- | ------------------------- |
+| Delay buffers / inverters   | Add delay in data path | Extra area & power        |
+| HVT / smaller cells         | Slow down logic        | May hurt setup timing     |
+| Routing detours / low metal | Increase net RC delay  | May increase congestion   |
+| Downsize drivers            | Reduce drive strength  | Can affect fanout         |
+| Useful clock skew           | Adjust clock arrival   | Must recheck setup timing |
+| Lock-up latches             | Fix scan/DFT hold      | Adds area & complexity    |
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
+Q) Crosstalk-aware timing closure
+
+🔹 Crosstalk-Aware Timing Closure Techniques
+1. Routing Optimization
+Increase spacing between critical nets → reduces coupling capacitance.
+Shielding → route a constant net (like VDD or GND) between aggressor and victim.
+Layer assignment → use orthogonal routing on adjacent metal layers.
+Non-default routing rules (NDRs) → wider wires or larger spacing on sensitive nets (e.g., clock).
+
+2. Buffer Insertion
+Break long victim nets by inserting buffers → reduces the effective coupling length.
+Restores signal strength and reduces susceptibility.
+
+3. Cell Sizing / Driver Strength Control
+Upsize victim driver → makes it stronger, less affected by aggressors.
+Downsize aggressor driver → reduces aggressor’s coupling effect.
+Careful: must check setup/hold balance after changes.
+
+4. Timing-Aware Fixes
+Useful skew → adjust clock arrival to compensate crosstalk-induced delays.
+Path restructuring → move critical nets to less noisy regions.
+Critical net shielding (especially clocks) to minimize jitter.
+
+5. SI-Aware STA & ECO Flow
+Use crosstalk-aware STA tools (e.g., PrimeTime-SI, Tempus SI).
+Perform ECO fixes where violations are reported:
+Delay padding
+Routing fixes
+Buffer insertion
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
+Q) Guard-band vs derating
+Guard-banding
+A design margining technique where you intentionally add slack requirements to cover variability.
+Example: If the target clock is 1 GHz (1 ns), analysis is done at 0.9 ns to ensure safety.
+Simple but pessimistic, often wastes performance/power.
+
+Derating
+Instead of shrinking the period, you scale individual delays in timing analysis to reflect variation.
+Example: In OCV (On-Chip Variation), data path delays are multiplied by 1.05, and clock path delays by 0.95.
+More fine-grained and realistic than guard-banding.
+
+👉 Key Difference:
+Guard-band = margin on the entire path/timing budget.
+Derating = margin on individual cells/nets, used in STA tools for OCV/AOCV/POCV.
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
+Q) Timing path prioritization
+When fixing timing violations (setup/hold), not all paths are equally important. Prioritization helps focus optimization:
+
+Criticality (Slack)
+Paths with most negative slack are top priority.
+Paths close to zero slack are secondary.
+
+Path Type
+Setup-critical paths → typically long combinational logic (data paths).
+Hold-critical paths → typically short, fast paths (local connections).
+
+Fanout & Load
+High fanout nets affect multiple paths → fixing them benefits many paths.
+
+Path Depth & Hierarchy
+Prioritize cross-domain or multi-cycle paths carefully.
+Clock-domain-crossing (CDC) and scan paths need special treatment.
+
+Design Intent
+Some paths may be false paths or multi-cycle paths, and shouldn’t be fixed by adding delay.
+
+👉 In practice: Tools assign a criticality score to each path; designers start with the worst negative slack (WNS) and total negative slack (TNS) contributors.
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
+Q) Clock jitter vs clock uncertainty
+Clock Jitter
+Variation of clock edge timing from its ideal position, due to PLL/oscillator noise, supply noise, etc.
+Types:
+Cycle-to-cycle jitter (difference between consecutive periods).
+Period jitter (variation in clock period).
+Phase jitter (deviation in edge position).
+
+Clock Uncertainty
+A timing analysis margin that models all sources of variation in clock arrival.
+Includes:
+Jitter
+Skew
+
+Crosstalk effects
+Tool/user-added margins
+
+👉 Key Difference:
+Jitter = physical clock variation (measured).
+Uncertainty = timing budget margin (applied in STA to cover jitter + other unknowns).
 
 ***************************************************************************************************************************************************************************************************
 𝗣𝗮𝗻𝗲𝗹 𝟲: 𝗦𝗶𝗴𝗻𝗼𝗳𝗳 𝗮𝗻𝗱 𝗣𝗼𝘄𝗲𝗿
