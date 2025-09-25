@@ -372,9 +372,15 @@ class const;
   rand int dice;
   constraint c1{ dice inside {[1:6]}; }
 endclass
+
 *----------------------------------------------------------------------------------------------------------------------------------------*
 
-Create a temperature sensor class where temp ranges -40 to 125ºC.
+28. Create a temperature sensor class where temp ranges -40 to 125ºC.
+class const;
+  var int temp;
+  constraint c1 { temp inside {[-40:125]}; }
+endclass
+
 *----------------------------------------------------------------------------------------------------------------------------------------*
 
 Create a vector of 10 IDs with all unique values.
