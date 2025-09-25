@@ -144,16 +144,20 @@ parameter int MAX_SIZE = 1024;
 assert property (@(posedge clk) packet_valid |-> packet_size < MAX_SIZE);
 *-------------------------------------------------------------------------------------------------------------------------------------*
 
-Ensure grant signal is not active for more than 10 cycles.
+36. Ensure grant signal is not active for more than 10 cycles.
+assert property (@(posedge clk) not (grant [*11]));
 *-------------------------------------------------------------------------------------------------------------------------------------*
 
-Assert temperature never exceeds 120°C.
+37. Assert temperature never exceeds 120°C.
+assert property (@(posedge clk)  (temp <= 120));
 *-------------------------------------------------------------------------------------------------------------------------------------*
 
-Ensure data_valid is only high when data_ready is also high.
+38. Ensure data_valid is only high when data_ready is also high.
+assert property (@(posedge clk) data_valid |-> data_ready);
 *-------------------------------------------------------------------------------------------------------------------------------------*
 
-Assert a valid handshake occurs before any data is transferred.
+39. Assert a valid handshake occurs before any data is transferred.
+
 *-------------------------------------------------------------------------------------------------------------------------------------*
 
 Check that a signal toggles at least once every 20 cycles.
