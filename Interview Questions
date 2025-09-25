@@ -533,22 +533,135 @@ Q) Methods to fix shorts/opens
 𝐑𝐞𝐜𝐫𝐮𝐢𝐭𝐞𝐫 𝐒𝐜𝐫𝐞𝐞𝐧𝐢𝐧𝐠
 1. Walk through your resume
 2. ASIC design projects handled?
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
 3. RTL to GDSII familiarity?
+🔹 RTL to GDSII Flow (Front-end → Back-end → Signoff)
+1. RTL Design & Verification (Front-End)
+RTL coding (Verilog/SystemVerilog/VHDL).
+Functional verification → simulation, assertions, coverage, UVM.
+Linting & CDC (Clock Domain Crossing) checks.
+DFT insertion at RTL → scan chains, MBIST, boundary scan, JTAG logic.
+
+2. Logic Synthesis
+Convert RTL → gate-level netlist using synthesis tools (Synopsys Design Compiler, Cadence Genus, etc.).
+Apply constraints (SDC): timing, area, power.
+Optimize for multi-mode multi-corner (MMMC).
+Insert DFT (scan) logic if not already done.
+Perform static timing analysis (pre-layout).
+
+3. Design for Test (DFT)
+Insert scan chains, BIST, boundary scan.
+ATPG pattern generation.
+Fault coverage analysis (stuck-at, transition, path delay, etc.).
+
+4. Floorplanning
+Define chip size, core vs IO ring.
+Place macros/IPs, memory blocks, IO pads, power grid (IR drop planning).
+Assign clock & reset distribution strategy.
+
+5. Placement
+Place standard cells in available rows.
+Perform global placement → legalize placement.
+Optimize for timing, congestion, power.
+
+6. Clock Tree Synthesis (CTS)
+Build the clock tree (buffer/inverter insertion).
+Minimize skew and insertion delay.
+Apply useful skew if needed.
+Perform pre-CTS STA and fix setup.
+
+7. Routing
+Global routing → rough path assignment.
+Detailed routing → actual wires assigned in layers.
+Consider DRC rules, crosstalk, shielding for critical nets (e.g., clock).
+Perform post-route optimization for timing, SI (signal integrity).
+
+8. Post-Route Optimization & Signoff
+Timing closure across all corners.
+Crosstalk-aware STA.
+IR drop / EM (electromigration) analysis.
+DRC/LVS checks → physical correctness.
+Antenna check for long wires.
+Power analysis (dynamic & leakage).
+
+9. GDSII Generation
+Once signoff is clean → final tape-out database generated in GDSII/OASIS format.
+Sent to the foundry for fabrication.
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
 4. Tool expertise (Verilog, Synthesis, STA tools)?
+
 5. Any post-silicon/tapeout experience?
 
 ***************************************************************************************************************************************************************************************************
 
 📌Panel 1: Basics + STA
+
 1. What is STA?
+Static Timing Analysis (STA) is a method to verify timing correctness of a digital design without applying test vectors.
+It checks all possible paths between flip-flops, I/Os, and memories to ensure they meet setup and hold requirements under all clock and data conditions.
+Called “static” because it doesn’t rely on dynamic simulation, but instead uses timing models and constraints.
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
 2. What is the difference between setup and hold time?
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
 3. How do you fix routing congestion?
+
+| Fix Area        | Techniques                                                 |
+| --------------- | ---------------------------------------------------------- |
+| Floorplan       | Spread macros, add channels, avoid notches, halos          |
+| Placement       | Congestion-driven placement, spread cells, density control |
+| Routing         | Higher layers, blockages, NDRs, shielding                  |
+| Netlist/Logic   | Buffer insertion, replication, reduce fanout               |
+| ECO / Iteration | Cell padding, local re-routing, congestion map checks      |
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
 4. Explain the antenna effect.
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
 5. What does IR drop mean?
+IR drop means the reduction in supply voltage at a cell due to resistive losses in the power grid (V = I×R). 
+It can be static or dynamic, and if severe, it slows down cells or causes functional failure. 
+Fixes include strengthening the power grid, inserting decaps, optimizing cell placement, and reducing simultaneous switching.
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
 6. What is the difference between an LVT and an HVT cell?
+LVT (Low-Vt cell):
+Lower transistor threshold voltage.
+Transistors switch faster, but leak more power.
+
+HVT (High-Vt cell):
+Higher transistor threshold voltage.
+Transistors switch slower, but leak less power.
+
+👉 In modern SoCs, libraries usually offer multi-Vt flavors: HVT, SVT (Standard Vt), and LVT.
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
 7. Explain Electromigration (EM).
+Electromigration is when current slowly moves atoms in a metal wire, creating breaks or shorts. 
+It’s fixed by wider wires, extra vias, stronger metals, and careful routing
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
 8. How do you handle clock domain crossing (CDC)?
+Clock Domain Crossing happens when signals move between different clock domains. 
+To handle CDC, we use synchronizer flip-flops for single-bit signals, asynchronous FIFOs for multi-bit buses, handshake protocols for control signals, and Gray codes for counters. 
+CDC analysis tools are also used to detect potential metastability and data corruption.
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
 9. What is OCV?
+
+
 ***************************************************************************************************************************************************************************************************
 
 📌Panel 2: Floorplanning to Routing
