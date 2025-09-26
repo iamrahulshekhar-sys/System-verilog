@@ -1,4 +1,4 @@
-Interview questions
+NVIDIA Interview questions
 
  
 Q) Floorplan-driven synthesis
@@ -709,3 +709,105 @@ CDC analysis tools are also used to detect potential metastability and data corr
 8. Design a divide-by-N counter.
 9. Design an FSM that acts as a 101 detector.
 10. What is the difference between a Mealy vs. Moore machine?
+
+
+
+APPLE - SOC Physical Design Interview
+
+1. Walk through your resume
+2. Physical design projects?
+3. Tools you’ve worked on?
+4. Full flow experience?
+
+Initial Technical Interview (1 Hour):
+
+1. What is STA?
+2. Explain setup/hold time violations
+3. What is OCV and how is it modeled?
+4. What is clock reconvergence pessimism?
+5. Difference: LVT vs HVT cells
+6. Impact of threshold voltage on power
+7. What is IR drop?
+8. What is antenna effect?
+9. What is EM (Electromigration)?
+10. How do you fix routing congestion?
+11. What is CDC?
+
+Panel 1: STA and Scripting
+
+1. What is CRPR?
+2. How do you fix crosstalk issues?
+3. Delay calculation in STA?
+4. SDC constraints types?
+5. Tcl script to extract top 10 critical paths?
+6. What is max\_transition constraint?
+7. How do you write reusable scripts in Python?
+
+Panel 2: Synthesis, DFT, Memory
+
+1. Difference: combinational vs sequential logic
+2. What is physical-aware synthesis?
+3. Floorplan impact on synthesis?
+4. What is scan chain?
+5. How are scan chains reordered post-layout?
+6. SRAM vs Register File?
+7. What is a shift register?
+8. Memory BIST vs logic BIST?
+9. What is ATPG?
+
+Panel 3: Floorplan to Route:
+
+1. Floorplan steps?
+2. Macro placement strategy?
+3. What is halo and blockage?
+4. Row utilization?
+5. What causes congestion?
+6. What is pin accessibility issue?
+7. Global vs detailed routing?
+8. What are routing DRCs you’ve fixed?
+
+Panel 4: Clock Tree Synthesis: 
+
+1. CTS flow?
+2. What is latency vs skew?
+3. Useful skew concept?
+4. How to reduce clock tree power?
+5. How do you balance CTS across power domains?
+6. Clock gating techniques?
+7. CTS-aware placement?
+
+Panel 5: Timing Closure and MCMM
+
+1. What is MCMM and why is it needed?
+2. What are setup ECOs?
+3. What are hold ECOs?
+4. SI-aware timing closure?
+5. Difference between derating and margin?
+6. What is path grouping?
+7. Clock uncertainty types?
+
+Panel 6: Signoff and Power
+
+1. Dynamic vs leakage power?
+2. What is IR drop?
+3. How do you fix IR drop?
+4. What is metal fill?
+5. EM rules in signoff?
+6. Common DRC errors?
+7. What is LVS and why is it needed?
+8. What are filler cells?
+9. How do you fix open shorts?
+
+Extra Common Questions (All Rounds):
+
+1. What is cross-talk delay?
+2. What is cell delay vs net delay?
+3. How does process corner affect timing?
+4. Explain RC extraction
+5. What is double patterning?
+6. What is multi-Vt optimization?
+7. What is a scan-def insertion flow?
+8. What is timing budgeting?
+9. How to debug a failing timing path?
+10. What is a timing arc?
+11. What is glitch and how is it handled?
