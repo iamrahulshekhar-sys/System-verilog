@@ -665,6 +665,7 @@ CDC analysis tools are also used to detect potential metastability and data corr
 ***************************************************************************************************************************************************************************************************
 
 📌Panel 2: Floorplanning to Routing
+
 1. What are the key steps in ASIC floorplanning?
 2. Explain the difference between Global vs. Detailed routing.
 3. What are halo and blockage definitions?
@@ -681,6 +682,7 @@ CDC analysis tools are also used to detect potential metastability and data corr
 4. What are the rules for Electromigration (EM) during signoff?
 5. Why are filler cells important?
 6. What are LVS and DRC checks?
+
 ***************************************************************************************************************************************************************************************************
 📌Panel 4: STA + Scripting
 1. What is CRPR?
