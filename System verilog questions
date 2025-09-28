@@ -1,1 +1,19 @@
+Write a program to enter even numbers with array size 30 elements using functions inside a class and display the result.
 
+Write a program to enter same value into array size 10 elements using functions inside a class and display the result.
+
+Write a program
+a. Take 2 arrays of different size.
+b. Enter the values to both the arrays using single function
+c. Compare both the array values at each index
+d. Display the values present at index of both arrays.
+e. Display the number of elements matched in the array [count].
+
+Design an ALU inside a class.
+a. Write program to perform operations [+ - * /] and display result using Scope Resolution Operator.
+
+Write a Program and Display
+a. Take 2 Queues in a class
+b. Enter the values into 2 Queues using “THIS” operator.
+c. Print both Queues.
+d. Do Push front and pushback value operation using FUNCTION and THIS operator.
