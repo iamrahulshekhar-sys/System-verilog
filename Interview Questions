@@ -685,13 +685,91 @@ CDC analysis tools are also used to detect potential metastability and data corr
 
 ***************************************************************************************************************************************************************************************************
 📌Panel 4: STA + Scripting
+
 1. What is CRPR?
+In timing analysis, we check:
+When data launches (start) → When data is captured (end).
+Both launch clock and capture clock signals travel through the chip using buffers, wires, etc.
+Sometimes, the two clocks travel through the same path for a while (they “reconverge”).
+Now, the STA tool tries to be safe (pessimistic):
+It adds delay for the launch path.
+It adds delay for the capture path.
+But in the shared section, the delay gets counted twice.
+That makes timing look worse than it actually is.
+Without CRPR → STA may report false timing violations.
+With CRPR → More accurate timing, fewer false alarms.
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
 2. How do you fix crosstalk noise/delay?
+Place more distance between aggressor and victim nets to reduce coupling capacitance.
+Route a constant net (like VDD or GND) between victim and aggressor → acts as a shield.
+Break a long victim net into two shorter segments with a buffer → reduces coupling length.
+Make the victim wire wider (lower resistance → less delay impact).
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
 3. How is delay computation performed in STA?
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
 4. What are the different types of SDC constraints?
+SDC = Synopsys Design Constraints
+It’s an industry-standard format (Tcl-based) used to describe the timing, power, and design intent of a digital design to EDA tools (STA, synthesis, P&R).
+Developed by Synopsys, but now used by almost all tools (PrimeTime, Innovus, Tempus, ICC, etc.).
+Without SDC, tools don’t know your clock definitions, I/O timings, or special exceptions → so STA would give meaningless results.
+
+Define how clocks behave.
+create_clock → Define primary clocks.
+create_generated_clock → Define derived clocks (dividers, PLLs, gated).
+set_clock_uncertainty → Jitter, skew margin.
+set_clock_latency → Clock distribution delay.
+set_clock_transition → Slew of clock.
+
+2. I/O Timing Constraints
+Tell STA when signals arrive/leave relative to the clock.
+set_input_delay → Delay from external source to chip input.
+set_output_delay → Delay from chip output to external sink.
+set_driving_cell / set_input_transition → Drive strength of input.
+set_load → Output load (capacitance).
+
+3. Timing Exceptions
+Relax or modify timing analysis where normal setup/hold checks don’t apply.
+set_false_path → Ignore a path (not functionally used).
+set_multicycle_path → Allow multiple cycles for a path.
+set_min/max_delay → Override tool-calculated delay.
+set_case_analysis → Fix signal to constant (like scan_enable = 0/1).
+
+4. Design Rule Constraints
+Ensure signal quality (not just timing).
+set_max_transition → Limit signal slew.
+set_max_capacitance → Limit load per pin.
+set_max_fanout → Limit number of driven loads.
+
+5. Operating Conditions / Libraries
+set_operating_conditions → PVT (process-voltage-temp) corners.
+set_timing_derate → Derating for on-chip variation.
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
 5. How would you use a Tcl script to find the top 10 critical paths?
+I’d use PrimeTime’s report_timing -max_paths 10 to directly get the 10 most critical paths. For automation, 
+I’d script it in Tcl with get_timing_paths, then extract attributes like startpoint, endpoint, and slack for custom reports.
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
 6. Explain the purpose of the max_transition constraint.
+set_max_transition sets a limit on signal transition time (slew) at a pin or net.
+Transition = the time it takes for a signal to rise from 10% → 90% (or fall 90% → 10%) of Vdd.
+
+Example:
+set_max_transition 0.5 [all_outputs]
+→ Means each output signal must switch within 0.5 ns.
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
 7. How do you ensure Python script reusability?
+
 ***************************************************************************************************************************************************************************************************
 📌Panel 5: Timing Closure + MCMM
 1. What is MCMM?
