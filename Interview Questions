@@ -891,3 +891,84 @@ Extra Common Questions (All Rounds):
 9. How to debug a failing timing path?
 10. What is a timing arc?
 11. What is glitch and how is it handled?
+
+
+NVIDIA - SOC Physical Design Engineer Role
+
+𝗥𝗲𝗰𝗿𝘂𝗶𝘁𝗲𝗿 𝗥𝗼𝘂𝗻𝗱:
+Walk me through your project experience
+Have you handled block-level or top-level design?
+Familiar tools and flows?
+Challenges you faced in tape-out?
+
+𝗜𝗻𝗶𝘁𝗶𝗮𝗹 𝗧𝗲𝗰𝗵𝗻𝗶𝗰𝗮𝗹 𝗜𝗻𝘁𝗲𝗿𝘃𝗶𝗲𝘄 (𝟭 𝗛𝗼𝘂𝗿):
+Explain timing closure flow
+Setup vs recovery/removal checks
+What is cross-corner analysis?
+Explain clock domain crossing issues
+Difference between multi-Vt and multi-Vdd
+Leakage vs dynamic power impact
+What is voltage droop?
+Metal density rules?
+Causes of electromigration?
+Placement congestion fixes?
+Explain asynchronous FIFO
+
+𝗣𝗮𝗻𝗲𝗹 𝟭: 𝗦𝗧𝗔 𝗮𝗻𝗱 𝗦𝗰𝗿𝗶𝗽𝘁𝗶𝗻𝗴
+Explain AOCV vs POCV
+Crosstalk delay vs crosstalk noise
+Types of timing paths in STA
+Key SDC commands for false path
+Write Tcl to find violating endpoints
+What is max_capacitance constraint?
+How do you modularize Python scripts?
+
+𝗣𝗮𝗻𝗲𝗹 𝟮: 𝗦𝘆𝗻𝘁𝗵𝗲𝘀𝗶𝘀, 𝗗𝗙𝗧, 𝗠𝗲𝗺𝗼𝗿𝘆
+Latch vs Flip-Flop
+Multi-bit flop usage
+Floorplan-driven synthesis
+What is boundary scan?
+Scan stitching at block level?
+Difference: SRAM vs DRAM
+Application of shift registers
+Logic BIST vs MBIST
+Fault coverage in ATPG
+
+𝗣𝗮𝗻𝗲𝗹 𝟯: 𝗙𝗹𝗼𝗼𝗿𝗽𝗹𝗮𝗻 𝘁𝗼 𝗥𝗼𝘂𝘁𝗲
+Key floorplan quality checks
+Macro placement with channel spacing
+Difference: keep-out vs blockage
+How utilization affects IR drop
+Sources of routing congestion
+Pin access issues in standard cells
+Difference: track-based vs grid routing
+Common routing violations
+
+𝗣𝗮𝗻𝗲𝗹 𝟰: 𝗖𝗹𝗼𝗰𝗸 𝗧𝗿𝗲𝗲 𝗦𝘆𝗻𝘁𝗵𝗲𝘀𝗶𝘀
+Steps in CTS optimization
+Define insertion delay vs skew
+Example of useful skew application
+Clock tree power reduction techniques
+Multi-power domain CTS handling
+Types of clock gating
+Placement optimization for CTS
+
+𝗣𝗮𝗻𝗲𝗹 𝟱: 𝗧𝗶𝗺𝗶𝗻𝗴 𝗖𝗹𝗼𝘀𝘂𝗿𝗲 𝗮𝗻𝗱 𝗠𝗖𝗠𝗠
+Why do we need multi-corner analysis?
+Setup fixing techniques
+Hold fixing techniques
+Crosstalk-aware timing closure
+Guard-band vs derating
+Timing path prioritization
+Clock jitter vs clock uncertainty
+
+𝗣𝗮𝗻𝗲𝗹 𝟲: 𝗦𝗶𝗴𝗻𝗼𝗳𝗳 𝗮𝗻𝗱 𝗣𝗼𝘄𝗲𝗿
+Active vs standby power
+Static vs dynamic IR drop
+IR drop mitigation methods
+Role of dummy metal fill
+EM checks in signoff
+DRC categories in routing
+Why is LVS mandatory?
+Role of end-cap cells
+Methods to fix shorts/opens
