@@ -972,3 +972,39 @@ DRC categories in routing
 Why is LVS mandatory?
 Role of end-cap cells
 Methods to fix shorts/opens
+
+
+
+
+
+PD
+1. What is HFNS?
+2. HFNS is checked on which net/pin it works during the synth and placement stage.
+3. What is a DCD check?
+4. When you get the DCD even after using the CLK buffer, how do you fix it?
+5. How to fix the glitch?
+6. What is the difference between clock mesh and conventional clock?
+7. What is the difference between a false path and a disabled timing arc?
+8. If you have a large latency of 200 ps but in design are getting 300 ps, what could be the reason for it? And how can it be fixed?
+9. What are the contents of the UPF file?
+10. Do we need UPF for a single-voltage design?
+11. In the CTS stage, if utilization is 90%, then we don’t get by connecting the supply net?
+12. What are set_eco_power_intent and max_eco?
+13. What are useful PrimeTime commands?
+14. In the placement-completed design, suppose there are three timings via block ports: a) with 800 ps b) with 300 ps c) with 50 ps What are your approaches to fix it?
+15. How to decide the floor plan height and width at the beginning of the design?
+16. What is utilization?
+17. How do you do power optimization at the placement stage?
+18. What are the report timing options you will use to dump the timing report?
+19. What is the difference between -max_paths and -nworst?
+20. What are macro placement guidelines?
+21. How do you decide the channel spacing?
+22. Suppose you have a macro in which some pins are at the periphery and some pins are in between; what will be your approach to placing it?
+23. Suppose you have created a hard bound for a group of 800 cells, and there are 1000 cells in that group. What will happen?
+24. What are setup fixes?
+25. Suppose you don’t have optimization options with you but have a data path; then what will you do?
+26. Pulling off launch fixes holds in the current path, which will be set up in the previous path. What will be your approach to fix it?
+27. What are hold fixes?
+28. What is clock gating?
+29. Why don’t we use a high-drive AND gate? Why only ICG2?
+30. Suppose we have a highly congested design and we can’t go for metal hopping or double width. What will be your approach to fix i
